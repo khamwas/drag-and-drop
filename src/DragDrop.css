@@ -19,11 +19,24 @@
 .App {
 	display: flex;
 	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 
 .container-drag {
 	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+	/* align-items: center; */
+	/* justify-content: center; */
+	/* align-items: center; */
+}
+
+.resultOuter {
+	display: flex;
 	flex-direction: column;
+	align-items: center;
 }
 
 .droppable {
@@ -33,7 +46,7 @@
 	align-items: center;
 	justify-content: center;
 	background: white;
-	margin: 10px;
+	/* margin: 10px; */
 	height: 35px;
 	width: 250px;
 	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
@@ -41,24 +54,20 @@
 }
 
 .order {
+	width: 250px;
+	min-height: 35px;
 	padding: 2px;
 	display: flex;
 	flex-wrap: wrap;
-	flex-direction: row;
+	flex-direction: column;
 	align-items: center;
-	justify-content: center;
+	justify-content: space-around;
 	background: white;
 	border: 1px solid #2b4162;
 	margin: 10px;
 
 	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 	transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-.header {
-}
-
-.type-header {
 }
 
 .gameCardContainer {
@@ -78,5 +87,17 @@
 }
 
 .gameCardContainer:hover {
+	box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+
+.button {
+	width: 75px;
+	height: 30px;
+
+	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+	transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.button:hover {
 	box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
 }

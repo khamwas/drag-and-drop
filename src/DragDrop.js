@@ -20,55 +20,40 @@ class DragDrop extends Component {
 	}
 
 	onDragStart(e, name) {
-		e.dataTransfer.setData('name', name);
+		e.dataTransfer.setData('name', name); //we are setting the value of name on the event here so we can know what is being dropped when we drop this div into its target container
 	}
 
 	onDragOver(e) {
-		e.preventDefault();
+		e.preventDefault(); //this is preventing the default for the event so that we can use the values we assigned on dragStart when we drop it.
 	}
 
-	onDrop(e, number) {
-		let name = e.dataTransfer.getData('name');
+	onDrop(e, number) {   //I only wanted one container to have one content.  
+		let name = e.dataTransfer.getData('name'); 
 
-		let newTypes = this.state.types.map((type) => {
+		let newTypes = this.state.types.map((type) => {  //So I am first copying this.state.types,
 			if (type.name === name) {
-				return Object.assign({}, { name: type.name, order: number });
+				return Object.assign({}, { name: type.name, order: number }); //finding the object with the name of what I am dropping and changing its order value to the target container value
 			} else if (type.order === number) {
-				return Object.assign({}, { name: type.name, order: 'initial' });
+				return Object.assign({}, { name: type.name, order: 'initial' }); //if there is already a content in the container I am kicking it back to the 'initial' container
 			} else {
-				return type;
+				return type; //if it is unchanged then we want it to stay the same
 			}
 		});
 
-		this.setState({ types: newTypes });
-	}
-
-	makeProfile() {
-		let profile = [];
-		for (let i = 1; i < 9; i++) {
-			profile.push(
-				this.state.types
-					.filter((elem) => elem.order.includes(i))
-					.map((item) => item.name)[0]
-			);
-		}
-
-		if (profile.length === 8) {
-			this.setState({ profile: profile });
-		}
+		this.setState({ types: newTypes }); //we are setting the state to our new order and the DOM will rerender any changes
 	}
 
 	render() {
-		var orders = {
+		var orders = {  //I am new, but I would assume it is not best practices to name keys as numberstrings. But I created this for a project that this was the best way for me to do it. I would suggest if implementing this in your own project to use actual strings for names
 			initial: [],
-			one1: [],
-			two2: [],
-			three3: [],
-			four4: [],
-			five5: [],
-			six6: [],
-			seven7: [],
-			eight8: []
+			'1': [],
+			'2': [],
+			'3': [],
+			'4': [],
+			'5': [],
+			'6': [],
+			'7': [],
+			'8': []
 		};
 		this.state.types.forEach((elem) => {
 			orders[elem.order].push(
@@ -82,99 +67,102 @@ class DragDrop extends Component {
 				</div>
 			);
 		});
-		// let wrappers = [];
-		// for (var x in orders) {
-		// 	if (x !== 'initial') {
-		// 		wrappers.push(
-		// 			<div
-		// 				className="droppable"
-		// 				onDrop={(e) => this.onDrop(e, x)}
-		// 				onDragOver={(e) => this.onDragOver(e)}
-		// 			>
-		// 				<span className="type-header">{x.substr(-1)}</span>
-		// 				{orders[x]}
-		// 			</div>
-		// 		);
-		// 	}
-		// }
+		let wrappers = []; //if you push jsx into an array and render the array, it will only show the jsx. This is the for in loop equivalent of .map to make cards from objects in react.
+		for (let x in orders) {
+			//you must use let here instead of var. due to scoping and closure or something, this will only drop into the last box if you don't use let. see article
+			if (x !== 'initial') { //my initial has different styling, so i left it out of my loop
+				//http://www.albertgao.xyz/2016/08/25/why-not-making-functions-within-a-loop-in-javascript/
+				wrappers.push(
+					<div
+						className="droppable"
+						onDrop={(e) => this.onDrop(e, x)}
+						onDragOver={(e) => this.onDragOver(e)}
+					>
+						<span className="type-header">{x}</span>
+						{orders[x]}
+					</div>
+				);
+			}
+		}
 		return (
-			<div className="container-drag">
+			<div className="resultOuter">
 				<h2 className="header">Drag & Drop</h2>
-				<div
-					className="order"
-					onDrop={(e) => this.onDrop(e, 'initial')}
-					onDragOver={(e) => this.onDragOver(e)}
-				>
-					<span className="type-header">INITIAL</span>
-					{orders.initial}
+				<div className="container-drag">
+					<div //I manually placed initial as it has a different classname, it could also be created in the for in loop if you wanted to share a classname with your other 
+						className="order"
+						onDrop={(e) => this.onDrop(e, 'initial')}
+						onDragOver={(e) => this.onDragOver(e)}
+					>
+						{orders.initial}
+					</div>
+					<div>{wrappers}</div>
+					{/* <div> //you can use the below code instead of rendering wrappers. wrappers makes all of these with a function so it is more dry.
+						<div
+							className="droppable"
+							onDrop={(e) => this.onDrop(e, '1')}
+							onDragOver={(e) => this.onDragOver(e)}
+						>
+							<span className="type-header">1</span>
+							{orders['1']}
+						</div>
+						<div
+							className="droppable"
+							onDrop={(e) => this.onDrop(e, '2')}
+							onDragOver={(e) => this.onDragOver(e)}
+						>
+							<span className="type-header">2</span>
+							{orders['2']}
+						</div>
+						<div
+							className="droppable"
+							onDrop={(e) => this.onDrop(e, '3')}
+							onDragOver={(e) => this.onDragOver(e)}
+						>
+							<span className="type-header">3</span>
+							{orders['3']}
+						</div>
+						<div
+							className="droppable"
+							onDrop={(e) => this.onDrop(e, '4')}
+							onDragOver={(e) => this.onDragOver(e)}
+						>
+							<span className="type-header">4</span>
+							{orders['4']}
+						</div>
+						<div
+							className="droppable"
+							onDrop={(e) => this.onDrop(e, '5')}
+							onDragOver={(e) => this.onDragOver(e)}
+						>
+							<span className="type-header">5</span>
+							{orders['5']}
+						</div>
+						<div
+							className="droppable"
+							onDrop={(e) => this.onDrop(e, '6')}
+							onDragOver={(e) => this.onDragOver(e)}
+						>
+							<span className="type-header">6</span>
+							{orders['6']}
+						</div>
+						<div
+							className="droppable"
+							onDrop={(e) => this.onDrop(e, '7')}
+							onDragOver={(e) => this.onDragOver(e)}
+						>
+							<span className="type-header">7</span>
+							{orders['7']}
+						</div>
+						<div
+							className="droppable"
+							onDrop={(e) => this.onDrop(e, '8')}
+							onDragOver={(e) => this.onDragOver(e)}
+						>
+							<span className="type-header">8</span>
+							{orders['8']}
+						</div>
+					</div> */}
 				</div>
-				{/* {wrappers} */}
-				<div
-					className="droppable"
-					onDrop={(e) => this.onDrop(e, 'one1')}
-					onDragOver={(e) => this.onDragOver(e)}
-				>
-					<span className="type-header">1</span>
-					{orders.one1}
-				</div>
-				<div
-					className="droppable"
-					onDrop={(e) => this.onDrop(e, 'two2')}
-					onDragOver={(e) => this.onDragOver(e)}
-				>
-					<span className="type-header">2</span>
-					{orders.two2}
-				</div>
-				<div
-					className="droppable"
-					onDrop={(e) => this.onDrop(e, 'three3')}
-					onDragOver={(e) => this.onDragOver(e)}
-				>
-					<span className="type-header">3</span>
-					{orders.three3}
-				</div>
-				<div
-					className="droppable"
-					onDrop={(e) => this.onDrop(e, 'four4')}
-					onDragOver={(e) => this.onDragOver(e)}
-				>
-					<span className="type-header">4</span>
-					{orders.four4}
-				</div>
-				<div
-					className="droppable"
-					onDrop={(e) => this.onDrop(e, 'five5')}
-					onDragOver={(e) => this.onDragOver(e)}
-				>
-					<span className="type-header">5</span>
-					{orders.five5}
-				</div>
-				<div
-					className="droppable"
-					onDrop={(e) => this.onDrop(e, 'six6')}
-					onDragOver={(e) => this.onDragOver(e)}
-				>
-					<span className="type-header">6</span>
-					{orders.six6}
-				</div>
-				<div
-					className="droppable"
-					onDrop={(e) => this.onDrop(e, 'seven7')}
-					onDragOver={(e) => this.onDragOver(e)}
-				>
-					<span className="type-header">7</span>
-					{orders.seven7}
-				</div>
-				<div
-					className="droppable"
-					onDrop={(e) => this.onDrop(e, 'eight8')}
-					onDragOver={(e) => this.onDragOver(e)}
-				>
-					<span className="type-header">8</span>
-					{orders.eight8}
-				</div>
-
-				<button onClick={() => this.makeProfile()}>Make Profile</button>
 			</div>
 		);
 	}
