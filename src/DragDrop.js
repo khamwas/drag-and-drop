@@ -27,10 +27,12 @@ class DragDrop extends Component {
 		e.preventDefault(); //this is preventing the default for the event so that we can use the values we assigned on dragStart when we drop it.
 	}
 
-	onDrop(e, number) {   //I only wanted one container to have one content.  
-		let name = e.dataTransfer.getData('name'); 
+	onDrop(e, number) {
+		//I only wanted one container to have one content.
+		let name = e.dataTransfer.getData('name');
 
-		let newTypes = this.state.types.map((type) => {  //So I am first copying this.state.types,
+		let newTypes = this.state.types.map((type) => {
+			//So I am first copying this.state.types,
 			if (type.name === name) {
 				return Object.assign({}, { name: type.name, order: number }); //finding the object with the name of what I am dropping and changing its order value to the target container value
 			} else if (type.order === number) {
@@ -44,7 +46,8 @@ class DragDrop extends Component {
 	}
 
 	render() {
-		var orders = {  //I am new, but I would assume it is not best practices to name keys as numberstrings. But I created this for a project that this was the best way for me to do it. I would suggest if implementing this in your own project to use actual strings for names
+		var orders = {
+			//I am new, but I would assume it is not best practices to name keys as numberstrings. But I created this for a project that this was the best way for me to do it. I would suggest if implementing this in your own project to use actual strings for names
 			initial: [],
 			'1': [],
 			'2': [],
@@ -70,16 +73,19 @@ class DragDrop extends Component {
 		let wrappers = []; //if you push jsx into an array and render the array, it will only show the jsx. This is the for in loop equivalent of .map to make cards from objects in react.
 		for (let x in orders) {
 			//you must use let here instead of var. due to scoping and closure or something, this will only drop into the last box if you don't use let. see article
-			if (x !== 'initial') { //my initial has different styling, so i left it out of my loop
+			if (x !== 'initial') {
+				//my initial has different styling, so i left it out of my loop
 				//http://www.albertgao.xyz/2016/08/25/why-not-making-functions-within-a-loop-in-javascript/
 				wrappers.push(
-					<div
-						className="droppable"
-						onDrop={(e) => this.onDrop(e, x)}
-						onDragOver={(e) => this.onDragOver(e)}
-					>
-						<span className="type-header">{x}</span>
-						{orders[x]}
+					<div className="container-drag">
+						<div
+							className="droppable"
+							onDrop={(e) => this.onDrop(e, x)}
+							onDragOver={(e) => this.onDragOver(e)}
+						>
+							<span className="type-header">{x}</span>
+							{orders[x]}
+						</div>
 					</div>
 				);
 			}
@@ -88,7 +94,7 @@ class DragDrop extends Component {
 			<div className="resultOuter">
 				<h2 className="header">Drag & Drop</h2>
 				<div className="container-drag">
-					<div //I manually placed initial as it has a different classname, it could also be created in the for in loop if you wanted to share a classname with your other 
+					<div //I manually placed initial as it has a different classname, it could also be created in the for in loop if you wanted to share a classname with your other
 						className="order"
 						onDrop={(e) => this.onDrop(e, 'initial')}
 						onDragOver={(e) => this.onDragOver(e)}
